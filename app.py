@@ -1,5 +1,3 @@
-# app.py 
-
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
 from database import connect_db, fetch_data
@@ -8,15 +6,14 @@ from utils import create_table_and_insert
 # Page config
 st.set_page_config(layout="wide")
 st.title("PyTorch MNIST Digit Recognizer")
-st.write("Draw a digit (0-9) below and click Predict")
+st.write("Draw a digit (0–9) below and click Predict")
 
 # Create 2 columns: Left for canvas, right for prediction
 col1, col2 = st.columns(2)
 
 # ---- LEFT COLUMN ----
 with col1:
-
-    # Drawing canvas
+    st.subheader("Canvas")
     canvas_result = st_canvas(
         fill_color="white",
         stroke_width=20,
@@ -28,7 +25,6 @@ with col1:
         key="canvas",
     )
 
-    # Predict button
     if st.button("Predict"):
         st.session_state.prediction_clicked = True
     else:
@@ -36,14 +32,23 @@ with col1:
 
 # ---- RIGHT COLUMN ----
 with col2:
+    st.subheader("Prediction")
+
     if st.session_state.get("prediction_clicked", False):
         st.metric(label="Predicted Digit", value="N/A", delta="Coming Soon")
         st.info("Prediction logic not implemented yet. Stay tuned!")
 
-# Create table and insert rows if not already done
+    # ---- Feedback Form ----
+    with st.form("feedback_form"):
+        true_label = st.number_input("Enter True Label:", min_value=0, max_value=9, step=1)
+        submitted = st.form_submit_button("Submit Feedback")
+        if submitted:
+            st.success(f"Feedback submitted! True label: {true_label}")
+
+# Create table and insert sample data (optional)
 create_table_and_insert()
 
-# Fetch and display data from the database
+# Fetch and display database data
 data = fetch_data()
 if data:
     st.write("Data from PostgreSQL database:")
