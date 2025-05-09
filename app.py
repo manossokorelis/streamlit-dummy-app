@@ -1,10 +1,12 @@
+# app.py 
+
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
 from database import connect_db, fetch_data
 from utils import create_table_and_insert
 
 # Streamlit UI
-st.title("Digits Recognizer 3")
+st.title("Digits Recognizer")
 st.write("Draw a digit on the canvas:")
 
 # Set up the drawing canvas
