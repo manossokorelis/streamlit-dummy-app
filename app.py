@@ -4,7 +4,19 @@ from utils import create_table_and_insert
 
 # Streamlit UI
 st.title("Digits Recognizer 3")
-st.write("This is a dummy Streamlit app deployed using Docker and Render.")
+st.write("Draw a digit on the canvas:")
+
+# Set up the drawing canvas
+canvas_result = st_canvas(
+    fill_color="white",  # background color
+    stroke_width=20,     # stroke width for drawing
+    stroke_color="black", # stroke color for drawing
+    background_color="white",  # canvas background color
+    width=280,
+    height=280,
+    drawing_mode="freedraw",  # allows freeform drawing
+    key="canvas",
+)
 
 # Create table and insert rows if not already done
 create_table_and_insert()
