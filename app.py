@@ -4,7 +4,6 @@ import streamlit as st
 from streamlit_drawable_canvas import st_canvas
 from database import connect_db, fetch_data
 from utils import create_table_and_insert
-import pandas as pd
 
 # Page config
 st.set_page_config(layout="wide")
@@ -51,22 +50,17 @@ st.subheader("Prediction History")
 
 # Fetch prediction history from the database
 data = fetch_data()
-
 if data:
-    # Prepare DataFrame from data, skipping the 'id' column (index 0)
-    history_data = [
-        {
-            "Timestamp": row[1],
-            "Pred": row[2],
-            "True": row[3],
-            "Conf": f"{float(row[4]):.1f}%"
-        }
-        for row in data
-    ]
-
-    df = pd.DataFrame(history_data)
-
-    # Display as a table (clean, readable, no vertical bars or markdown)
-    st.table(df)
+    # Display the fetched data in a table
+    history_data = []
+    for row in data:
+        timestamp = row[1]
+        predicted_digit = row[2]
+        true_label = row[3]
+        confidence = row[4]
+        history_data.append([timestamp, predicted_digit, true_label, f"{confidence}%"])
+    
+    # Show as a table
+    st.table(history_data)
 else:
-    st.info("No prediction history to display.")
+    st.write("No prediction history to display.")
