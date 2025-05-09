@@ -52,21 +52,20 @@ st.subheader("Prediction History")
 data = fetch_data()
 
 if data:
-    # Limit to most recent 10 entries (optional)
-    recent_data = data[-10:]  
+    # Prepare DataFrame from data, skipping the 'id' column (index 0)
+    history_data = [
+        {
+            "Timestamp": row[1],
+            "Pred": row[2],
+            "True": row[3],
+            "Conf": f"{float(row[4]):.1f}%"
+        }
+        for row in data
+    ]
 
-    # Display in horizontal blocks
-    cols = st.columns(len(recent_data))
-    for col, row in zip(cols, recent_data):
-        timestamp = row[1]
-        pred = row[2]
-        true = row[3]
-        conf = f"{float(row[4]):.1f}%"
-        col.markdown(f"""
-        **🕒** `{timestamp}`
-        **Pred:** `{pred}`  
-        **True:** `{true}`  
-        **Conf:** `{conf}`
-        """)
+    df = pd.DataFrame(history_data)
+
+    # Display as a table (clean, readable, no vertical bars or markdown)
+    st.table(df)
 else:
     st.info("No prediction history to display.")
