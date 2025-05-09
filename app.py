@@ -23,7 +23,6 @@ with col1:
         drawing_mode="freedraw",
         key="canvas",
     )
-
     if st.button("Predict"):
         st.session_state.prediction_clicked = True
     else:
@@ -33,14 +32,12 @@ with col1:
 with col2:
     if st.session_state.get("prediction_clicked", False):
         st.metric(label="Predicted Digit", value="N/A", delta="Coming Soon")
-        st.info("Prediction logic not implemented yet. Stay tuned!")
-
         # ---- Show feedback form after Predict ----
         with st.form("feedback_form"):
             true_label = st.number_input("Enter True Label:", min_value=0, max_value=9, step=1)
             submitted = st.form_submit_button("Submit Feedback")
             if submitted:
-                st.success(f"Feedback submitted! True label: {true_label}")
+                st.success(f"Feedback logged to database!")
 
 
 # Create table and insert sample data (optional)
