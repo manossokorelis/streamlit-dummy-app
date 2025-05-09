@@ -13,7 +13,6 @@ col1, col2 = st.columns(2)
 
 # ---- LEFT COLUMN ----
 with col1:
-    st.subheader("Canvas")
     canvas_result = st_canvas(
         fill_color="white",
         stroke_width=20,
@@ -32,18 +31,17 @@ with col1:
 
 # ---- RIGHT COLUMN ----
 with col2:
-    st.subheader("Prediction")
-
     if st.session_state.get("prediction_clicked", False):
         st.metric(label="Predicted Digit", value="N/A", delta="Coming Soon")
         st.info("Prediction logic not implemented yet. Stay tuned!")
 
-    # ---- Feedback Form ----
-    with st.form("feedback_form"):
-        true_label = st.number_input("Enter True Label:", min_value=0, max_value=9, step=1)
-        submitted = st.form_submit_button("Submit Feedback")
-        if submitted:
-            st.success(f"Feedback submitted! True label: {true_label}")
+        # ---- Show feedback form after Predict ----
+        with st.form("feedback_form"):
+            true_label = st.number_input("Enter True Label:", min_value=0, max_value=9, step=1)
+            submitted = st.form_submit_button("Submit Feedback")
+            if submitted:
+                st.success(f"Feedback submitted! True label: {true_label}")
+
 
 # Create table and insert sample data (optional)
 create_table_and_insert()
