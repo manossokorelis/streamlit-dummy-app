@@ -52,37 +52,20 @@ st.subheader("Prediction History")
 data = fetch_data()
 
 if data:
-    # Build HTML table manually
-    table_html = """
-    <table style='width:100%; border-collapse: collapse;'>
-        <thead>
-            <tr>
-                <th style='text-align: left; padding: 6px;'>Timestamp</th>
-                <th style='text-align: left; padding: 6px;'>Pred</th>
-                <th style='text-align: left; padding: 6px;'>True</th>
-                <th style='text-align: left; padding: 6px;'>Conf</th>
-            </tr>
-        </thead>
-        <tbody>
-    """
+    # Prepare DataFrame from data, skipping the 'id' column (index 0)
+    history_data = [
+        {
+            "Timestamp": row[1],
+            "Pred": row[2],
+            "True": row[3],
+            "Conf": f"{float(row[4]):.1f}%"
+        }
+        for row in data
+    ]
 
-    for row in data:
-        timestamp = row[1]
-        pred = row[2]
-        true = row[3]
-        conf = f"{float(row[4]):.1f}%"
-        table_html += f"""
-            <tr>
-                <td style='padding: 6px;'>{timestamp}</td>
-                <td style='padding: 6px;'>{pred}</td>
-                <td style='padding: 6px;'>{true}</td>
-                <td style='padding: 6px;'>{conf}</td>
-            </tr>
-        """
+    df = pd.DataFrame(history_data)
 
-    table_html += "</tbody></table>"
-
-    # Render HTML table in Streamlit
-    st.markdown(table_html, unsafe_allow_html=True)
+    # Display as a table (clean, readable, no vertical bars or markdown)
+    st.table(df)
 else:
     st.info("No prediction history to display.")
