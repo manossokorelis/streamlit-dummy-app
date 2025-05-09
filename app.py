@@ -51,16 +51,18 @@ st.subheader("Prediction History")
 # Fetch prediction history from the database
 data = fetch_data()
 if data:
-    # Display the fetched data in a table
+    # Prepare data for display without the 'id' field
     history_data = []
     for row in data:
-        timestamp = row[1]
-        predicted_digit = row[2]
-        true_label = row[3]
-        confidence = row[4]
+        timestamp = row[1]  # Timestamp is in the second column (index 1)
+        predicted_digit = row[2]  # Predicted digit in the third column (index 2)
+        true_label = row[3]  # True label in the fourth column (index 3)
+        confidence = row[4]  # Confidence in the fifth column (index 4)
         history_data.append([timestamp, predicted_digit, true_label, f"{confidence}%"])
     
-    # Show as a table
-    st.table(history_data)
+    # Show data in a table format
+    st.write(f"**Timestamp | Pred | True | Conf**")
+    for entry in history_data:
+        st.write(f"{entry[0]} | {entry[1]} | {entry[2]} | {entry[3]}")
 else:
     st.write("No prediction history to display.")
