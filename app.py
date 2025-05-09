@@ -4,6 +4,7 @@ import streamlit as st
 from streamlit_drawable_canvas import st_canvas
 from database import connect_db, fetch_data
 from utils import create_table_and_insert
+import pandas as pd
 
 # Page config
 st.set_page_config(layout="wide")
