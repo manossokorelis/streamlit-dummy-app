@@ -31,7 +31,7 @@ def fetch_data():
     connection = connect_db()
     if connection:
         cursor = connection.cursor()
-        query = "SELECT * FROM users LIMIT 5;"  # Fetch data from the users table
+        query = "SELECT * FROM predictions;"  # Fetch data from the users table
         cursor.execute(query)
         rows = cursor.fetchall()
         cursor.close()
