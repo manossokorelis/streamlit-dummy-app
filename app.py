@@ -50,17 +50,39 @@ st.subheader("Prediction History")
 
 # Fetch prediction history from the database
 data = fetch_data()
+
 if data:
-    # Display the fetched data in a table
-    history_data = []
+    # Build HTML table manually
+    table_html = """
+    <table style='width:100%; border-collapse: collapse;'>
+        <thead>
+            <tr>
+                <th style='text-align: left; padding: 6px;'>Timestamp</th>
+                <th style='text-align: left; padding: 6px;'>Pred</th>
+                <th style='text-align: left; padding: 6px;'>True</th>
+                <th style='text-align: left; padding: 6px;'>Conf</th>
+            </tr>
+        </thead>
+        <tbody>
+    """
+
     for row in data:
         timestamp = row[1]
-        predicted_digit = row[2]
-        true_label = row[3]
-        confidence = row[4]
-        history_data.append([timestamp, predicted_digit, true_label, f"{confidence}%"])
-    
-    # Show as a table
-    st.table(history_data)
+        pred = row[2]
+        true = row[3]
+        conf = f"{float(row[4]):.1f}%"
+        table_html += f"""
+            <tr>
+                <td style='padding: 6px;'>{timestamp}</td>
+                <td style='padding: 6px;'>{pred}</td>
+                <td style='padding: 6px;'>{true}</td>
+                <td style='padding: 6px;'>{conf}</td>
+            </tr>
+        """
+
+    table_html += "</tbody></table>"
+
+    # Render HTML table in Streamlit
+    st.markdown(table_html, unsafe_allow_html=True)
 else:
-    st.write("No prediction history to display.")
+    st.info("No prediction history to display.")
