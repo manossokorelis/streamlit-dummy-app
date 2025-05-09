@@ -45,11 +45,22 @@ with col2:
 # Create table and insert sample data (optional)
 create_table_and_insert()
 
-# Fetch and display database data
+# ---- PREDICTION HISTORY ----
+st.subheader("Prediction History")
+
+# Fetch prediction history from the database
 data = fetch_data()
 if data:
-    st.write("Data from PostgreSQL database:")
+    # Display the fetched data in a table
+    history_data = []
     for row in data:
-        st.write(row)
+        timestamp = row[1]
+        predicted_digit = row[2]
+        true_label = row[3]
+        confidence = row[4]
+        history_data.append([timestamp, predicted_digit, true_label, f"{confidence}%"])
+    
+    # Show as a table
+    st.table(history_data)
 else:
-    st.write("No data to display.")
+    st.write("No prediction history to display.")
