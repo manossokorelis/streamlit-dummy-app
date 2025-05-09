@@ -1,3 +1,5 @@
+# utils.py
+
 import psycopg2
 import streamlit as st
 from database import connect_db
@@ -10,25 +12,29 @@ def create_table_and_insert():
         
         # Create table if it doesn't exist
         create_table_query = '''
-        CREATE TABLE IF NOT EXISTS users (
+        CREATE TABLE IF NOT EXISTS predictions (
             id SERIAL PRIMARY KEY,
-            name VARCHAR(100),
-            email VARCHAR(100)
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            predicted_digit INTEGER,
+            true_label INTEGER,
+            confidence FLOAT
         );
         '''
         cursor.execute(create_table_query)
         connection.commit()
         
-        # Insert rows into the table
+        # Insert a new prediction record (example)
         insert_query = '''
-        INSERT INTO users (name, email)
-        VALUES (%s, %s)
+        INSERT INTO predictions (predicted_digit, true_label, confidence)
+        VALUES (%s, %s, %s)
         ON CONFLICT DO NOTHING;  -- Prevent inserting duplicate rows
         '''
+        
+        # You can update this part to insert real values dynamically after a prediction
         rows_to_insert = [
-            ('John Doe', 'john.doe@example.com'),
-            ('Jane Smith', 'jane.smith@example.com'),
-            ('Alice Johnson', 'alice.johnson@example.com')
+            (3, 1, 99.6),
+            (3, 1, 99.6),
+            (3, 1, 99.6)
         ]
         cursor.executemany(insert_query, rows_to_insert)
         connection.commit()
