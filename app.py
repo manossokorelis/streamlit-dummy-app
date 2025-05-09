@@ -33,7 +33,7 @@ with col1:
 # ---- RIGHT COLUMN ----
 with col2:
     if st.session_state.get("prediction_clicked", False):
-        st.metric(label="Predicted Digit", value="N/A", delta="Coming Soon")
+        st.metric(label="Prediction", value="N/A", delta="..%")
         # ---- Show feedback form after Predict ----
         with st.form("feedback_form"):
             true_label = st.number_input("Enter True Label:", min_value=0, max_value=9, step=1)
@@ -50,19 +50,23 @@ st.subheader("Prediction History")
 
 # Fetch prediction history from the database
 data = fetch_data()
+
 if data:
-    # Prepare data for display without the 'id' field
-    history_data = []
-    for row in data:
-        timestamp = row[1]  # Timestamp is in the second column (index 1)
-        predicted_digit = row[2]  # Predicted digit in the third column (index 2)
-        true_label = row[3]  # True label in the fourth column (index 3)
-        confidence = row[4]  # Confidence in the fifth column (index 4)
-        history_data.append([timestamp, predicted_digit, true_label, f"{confidence}%"])
-    
-    # Show data in a table format
-    st.write(f"**Timestamp | Pred | True | Conf**")
-    for entry in history_data:
-        st.write(f"{entry[0]} | {entry[1]} | {entry[2]} | {entry[3]}")
+    # Limit to most recent 10 entries (optional)
+    recent_data = data[-10:]  
+
+    # Display in horizontal blocks
+    cols = st.columns(len(recent_data))
+    for col, row in zip(cols, recent_data):
+        timestamp = row[1]
+        pred = row[2]
+        true = row[3]
+        conf = f"{float(row[4]):.1f}%"
+        col.markdown(f"""
+        **🕒** `{timestamp}`
+        **Pred:** `{pred}`  
+        **True:** `{true}`  
+        **Conf:** `{conf}`
+        """)
 else:
-    st.write("No prediction history to display.")
+    st.info("No prediction history to display.")
