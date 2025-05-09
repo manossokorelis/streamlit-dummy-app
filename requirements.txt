@@ -1,6 +1,2 @@
+psycopg2-binary
 streamlit
-torch
-torchvision
-Pillow
-streamlit-drawable-canvas
-psycopg2
