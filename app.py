@@ -6,7 +6,7 @@ import pandas as pd
 import torch
 import numpy as np
 from PIL import Image
-from model import load_model  # Assuming model.py exists
+from model import load_model 
 
 # Page config
 st.set_page_config(layout="centered")
@@ -36,35 +36,29 @@ with col1:
     else:
         st.session_state.prediction_clicked = st.session_state.get("prediction_clicked", False)
 
-
 # ---- RIGHT COLUMN ----
 with col2:
+    # Check if the prediction button was pressed and there is a drawn image
     if st.session_state.get("prediction_clicked", False) and canvas_result.image_data is not None:
         img = canvas_result.image_data
-
         # Preprocess image
         # 1. Invert the image to match MNIST style
         img = 255 - img[:, :, 0]  # Invert image (since canvas is white=255, black=0)
-        
         # 2. Resize to (28, 28) and convert to grayscale (already grayscale but good to ensure)
         img = Image.fromarray(img.astype(np.uint8)).resize((28, 28)).convert("L")
-
         # 3. Convert to numpy array and normalize (MNIST normalization: mean=0.1307, std=0.3081)
         img = np.array(img, dtype=np.float32)
         img = img / 255.0  # Normalize to [0, 1] range
         img = (img - 0.1307) / 0.3081  # Apply the MNIST normalization
-        
         # 4. Convert to tensor and add batch dimension
         img = torch.tensor(img, dtype=torch.float32).unsqueeze(0).unsqueeze(0)
-
         # Predict
         with torch.no_grad():
             output = model(img)
             pred = output.argmax(dim=1).item()
             conf = torch.softmax(output, dim=1)[0][pred].item() * 100
-
+        # Show prediction and confidence
         st.metric(label="Prediction", value=str(pred), delta=f"{conf:.1f}%")
-        
         # Optional: Feedback form
         with st.form("feedback_form"):
             true_label = st.number_input("Enter True Label:", min_value=0, max_value=9, step=1)
@@ -72,6 +66,15 @@ with col2:
             if submitted:
                 st.success("Feedback logged to database!")
                 # Optional: Save to DB here
+    # Reset prediction state when starting a new drawing
+    if canvas_result.image_data is not None:
+        # Check if the user is drawing by examining if the drawing mode has changed
+        if not st.session_state.get("prediction_clicked", False):
+            # Set the flag to False when a new drawing starts (before prediction is clicked again)
+            st.session_state.prediction_clicked = False
+    # Ensure the user presses "Predict" again for the next drawing
+    if not st.session_state.get("prediction_clicked", False):
+        st.write("Draw a digit and then click 'Predict' to get a result!")
 
 # Create table and insert sample data (optional)
 create_table_and_insert()
