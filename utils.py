@@ -1,5 +1,6 @@
 # utils.py
 
+import streamlit as st
 from database import connect_db
 from datetime import datetime
 from psycopg2 import sql
