@@ -67,24 +67,6 @@ with col2:
                 insert_prediction(pred=pred, true_label=true_label, confidence=conf)
 
 # ---- PREDICTION HISTORY ----
-# st.subheader("Prediction History")
-# data = fetch_data()
-# if data:
-#     history_data = [
-#         {
-#             "Timestamp": row[1],
-#             "Pred": row[2],
-#             "True": row[3],
-#             "Conf": f"{float(row[4]):.1f}%"
-#         }
-#         for row in reversed(data) 
-#     ]
-#     df = pd.DataFrame(history_data)
-#     st.table(df)
-# else:
-#     st.info("No prediction history to display.")
-
-# ---- PREDICTION HISTORY ----
 st.subheader("Prediction History")
 data = fetch_data()
 

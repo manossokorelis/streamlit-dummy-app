@@ -29,7 +29,7 @@ def fetch_data():
     connection = connect_db()
     if connection:
         cursor = connection.cursor()
-        query = "SELECT * FROM predictions LIMIT 10;" 
+        query = "SELECT * FROM predictions ORDER BY timestamp DESC LIMIT 10;"
         cursor.execute(query)
         rows = cursor.fetchall()
         cursor.close()
