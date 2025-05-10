@@ -21,10 +21,11 @@ if "prediction_clicked" not in st.session_state:
 if "last_canvas_data" not in st.session_state:
     st.session_state.last_canvas_data = None
 
+# Create a table 
 create_table()
 
 # Load trained model
-model = load_model("mnist_cnn.pth")
+model = load_model("mnist_cnn.pth") # model = load_model("../data/mnist_cnn.pth")
 model.eval()
 
 # ---- LEFT COLUMN ----

@@ -2,6 +2,7 @@
 
 from database import connect_db
 from datetime import datetime
+from psycopg2 import sql
 
 # Create a table if it doesn't exist
 def create_table():

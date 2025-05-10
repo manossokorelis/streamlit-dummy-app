@@ -2,7 +2,6 @@
 
 import psycopg2
 import streamlit as st
-from psycopg2 import sql
 import os
 
 # Set up the connection to the database using environment variables or directly
