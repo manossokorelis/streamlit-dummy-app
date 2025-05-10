@@ -17,7 +17,7 @@ COPY . .
 EXPOSE 8080
 
 # Disable Streamlit file watcher to avoid torch.classes error (MAY DELETE IT)
-ENV STREAMLIT_WATCHER_TYPE=none 
+# ENV STREAMLIT_WATCHER_TYPE=none 
 
 # Run the Streamlit app
 CMD ["streamlit", "run", "app.py", "--server.port=8080", "--server.address=0.0.0.0"]

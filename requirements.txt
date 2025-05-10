@@ -3,5 +3,4 @@ streamlit
 streamlit-drawable-canvas
 pandas
 torch
-torchvision
 Pillow
