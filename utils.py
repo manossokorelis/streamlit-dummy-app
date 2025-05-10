@@ -25,6 +25,7 @@ def create_table():
         connection.close()
 
 # Query the database
+# @st.cache_data
 def fetch_data():
     connection = connect_db()
     if connection:

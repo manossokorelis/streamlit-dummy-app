@@ -14,7 +14,7 @@ from utils import create_table, fetch_data, insert_prediction
 # Page config
 st.set_page_config(layout="centered")
 st.title("PyTorch MNIST Digit Recognizer")
-st.write("Draw a digit (0–9) below and click Predict")
+st.write("Draw a digit (0-9) below and click Predict.")
 col1, col2 = st.columns(2)
 if "prediction_clicked" not in st.session_state:
     st.session_state.prediction_clicked = False
