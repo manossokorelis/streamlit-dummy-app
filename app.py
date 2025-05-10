@@ -9,26 +9,23 @@ import torch.nn.functional as F
 import numpy as np
 import pandas as pd
 from model import load_model
-from database import fetch_data, insert_prediction
-from utils import create_table_and_insert  
+from utils import create_table, fetch_data, insert_prediction
 
 # Page config
 st.set_page_config(layout="centered")
 st.title("PyTorch MNIST Digit Recognizer")
 st.write("Draw a digit (0–9) below and click Predict")
-
-# Load trained model
-model = load_model("mnist_cnn.pth")
-model.eval()
-
-# Initialize session state for prediction control
+col1, col2 = st.columns(2)
 if "prediction_clicked" not in st.session_state:
     st.session_state.prediction_clicked = False
 if "last_canvas_data" not in st.session_state:
     st.session_state.last_canvas_data = None
 
-# Create 2 columns: Left for canvas, right for prediction
-col1, col2 = st.columns(2)
+create_table()
+
+# Load trained model
+model = load_model("mnist_cnn.pth")
+model.eval()
 
 # ---- LEFT COLUMN ----
 with col1:
@@ -42,16 +39,13 @@ with col1:
         drawing_mode='freedraw',
         key="canvas",
     )
-    # Detect if canvas has changed; if yes, reset prediction
     if canvas_result.image_data is not None:
         current_img_data = canvas_result.image_data.copy()
-        # If the canvas has changed from last time, reset prediction
         if st.session_state.last_canvas_data is not None and not np.array_equal(current_img_data, st.session_state.last_canvas_data):
-            st.session_state.prediction_clicked = False  # <-- Reset prediction on canvas change
-        # Update stored canvas
+            st.session_state.prediction_clicked = False  
         st.session_state.last_canvas_data = current_img_data
     if st.button("Predict"):
-        st.session_state.prediction_clicked = True  # <-- Set prediction trigger
+        st.session_state.prediction_clicked = True  
 
 # ---- RIGHT COLUMN ----
 with col2:
@@ -60,24 +54,17 @@ with col2:
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         img = img.astype(np.float32) / 255.0
         img_tensor = torch.tensor(img).unsqueeze(0).unsqueeze(0)
-
         with torch.no_grad():
             output = model(img_tensor)
             pred = output.argmax(dim=1).item()
             conf = F.softmax(output, dim=1)[0][pred].item() * 100
-
         st.metric(label="Prediction", value=str(pred), delta=f"{conf:.1f}%")
-
         with st.form("feedback_form"):
             true_label = st.number_input("Enter True Label:", min_value=0, max_value=9, step=1)
             submitted = st.form_submit_button("Submit Feedback")
             if submitted:
                 st.success("Feedback logged to database!")
-                # Insert the prediction result and feedback into the database
                 insert_prediction(pred=pred, true_label=true_label, confidence=conf)
-
-# Create table and insert sample data (optional)
-create_table_and_insert()
 
 # ---- PREDICTION HISTORY ----
 st.subheader("Prediction History")

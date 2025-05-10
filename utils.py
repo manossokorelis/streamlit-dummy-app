@@ -1,16 +1,13 @@
 # utils.py
 
-import psycopg2
-import streamlit as st
 from database import connect_db
+from datetime import datetime
 
-# Create a table and insert some rows if the table doesn't exist
-def create_table_and_insert():
+# Create a table if it doesn't exist
+def create_table():
     connection = connect_db()
     if connection:
         cursor = connection.cursor()
-        
-        # Create table if it doesn't exist
         create_table_query = '''
         CREATE TABLE IF NOT EXISTS predictions (
             id SERIAL PRIMARY KEY,
@@ -22,23 +19,34 @@ def create_table_and_insert():
         '''
         cursor.execute(create_table_query)
         connection.commit()
-        
-        # Insert a new prediction record (example)
-        insert_query = '''
-        INSERT INTO predictions (predicted_digit, true_label, confidence)
-        VALUES (%s, %s, %s)
-        ON CONFLICT DO NOTHING;  -- Prevent inserting duplicate rows
-        '''
-        
-        # You can update this part to insert real values dynamically after a prediction
-        rows_to_insert = [
-            (3, 1, 99.6),
-            (3, 1, 99.6),
-            (3, 1, 99.6)
-        ]
-        cursor.executemany(insert_query, rows_to_insert)
-        connection.commit()
-        
-        # Close cursor and connection
         cursor.close()
         connection.close()
+
+# Query the database
+def fetch_data():
+    connection = connect_db()
+    if connection:
+        cursor = connection.cursor()
+        query = "SELECT * FROM predictions;" 
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        cursor.close()
+        connection.close()
+        return rows
+    else:
+        return []
+
+# Insert new prediction data
+def insert_prediction(pred, true_label, confidence):
+    connection = connect_db()
+    if connection:
+        cursor = connection.cursor()
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        query = sql.SQL("INSERT INTO predictions (timestamp, predicted_label, true_label, confidence) VALUES (%s, %s, %s, %s);")
+        cursor.execute(query, (timestamp, pred, true_label, confidence))
+        connection.commit()
+        cursor.close()
+        connection.close()
+        st.success("Prediction and feedback saved to database!")
+    else:
+        st.error("Error saving feedback to the database.")
