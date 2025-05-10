@@ -64,8 +64,25 @@ with col2:
             true_label = st.number_input("Enter True Label:", min_value=0, max_value=9, step=1)
             submitted = st.form_submit_button("Submit Feedback")
             if submitted:
-                st.success("Feedback logged to database!")
                 insert_prediction(pred=pred, true_label=true_label, confidence=conf)
+
+# ---- PREDICTION HISTORY ----
+# st.subheader("Prediction History")
+# data = fetch_data()
+# if data:
+#     history_data = [
+#         {
+#             "Timestamp": row[1],
+#             "Pred": row[2],
+#             "True": row[3],
+#             "Conf": f"{float(row[4]):.1f}%"
+#         }
+#         for row in reversed(data) 
+#     ]
+#     df = pd.DataFrame(history_data)
+#     st.table(df)
+# else:
+#     st.info("No prediction history to display.")
 
 # ---- PREDICTION HISTORY ----
 st.subheader("Prediction History")
@@ -76,11 +93,31 @@ if data:
             "Timestamp": row[1],
             "Pred": row[2],
             "True": row[3],
-            "Conf": f"{float(row[4]):.1f}%"
+            "Conf": f"{float(row[4]):.0f}%"
         }
-        for row in reversed(data) 
+        for row in reversed(data)
     ]
-    df = pd.DataFrame(history_data)
-    st.table(df)
+    
+    # Create header with fixed-width columns
+    table_md = """
+<style>
+.pred-table {
+    font-family: monospace;
+    white-space: pre;
+}
+</style>
+<div class="pred-table">
+<b>{:<20} {:<6} {:<6} {:<6}</b>
+""".format("Timestamp", "Pred", "True", "Conf")
+
+    # Add each row
+    for row in history_data:
+        table_md += "{:<20} {:<6} {:<6} {:<6}\n".format(
+            row["Timestamp"], row["Pred"], row["True"], row["Conf"]
+        )
+
+    table_md += "</div>"
+
+    st.markdown(table_md, unsafe_allow_html=True)
 else:
     st.info("No prediction history to display.")

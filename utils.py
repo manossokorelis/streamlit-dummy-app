@@ -29,7 +29,7 @@ def fetch_data():
     connection = connect_db()
     if connection:
         cursor = connection.cursor()
-        query = "SELECT * FROM predictions;" 
+        query = "SELECT * FROM predictions LIMIT 10;" 
         cursor.execute(query)
         rows = cursor.fetchall()
         cursor.close()
@@ -49,6 +49,6 @@ def insert_prediction(pred, true_label, confidence):
         connection.commit()
         cursor.close()
         connection.close()
-        st.success("Prediction and feedback saved to database!")
+        st.success("Feedback logged to database!")
     else:
         st.error("Error saving feedback to the database.")
