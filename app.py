@@ -9,7 +9,8 @@ import torch.nn.functional as F
 import numpy as np
 import pandas as pd
 from model import load_model
-from database import create_table_and_insert, fetch_data 
+from database import create_table_and_insert
+from utils import fetch_data 
 
 # Page config
 st.set_page_config(layout="centered")
