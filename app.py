@@ -25,7 +25,7 @@ if "last_canvas_data" not in st.session_state:
 create_table()
 
 # Load trained model
-model = load_model("mnist_cnn.pth") # model = load_model("../data/mnist_cnn.pth")
+model = load_model("mnist_cnn.pth")
 model.eval()
 
 # ---- LEFT COLUMN ----

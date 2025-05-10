@@ -43,7 +43,7 @@ def insert_prediction(pred, true_label, confidence):
     if connection:
         cursor = connection.cursor()
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        query = sql.SQL("INSERT INTO predictions (timestamp, predicted_label, true_label, confidence) VALUES (%s, %s, %s, %s);")
+        query = sql.SQL("INSERT INTO predictions (timestamp, predicted_digit, true_label, confidence) VALUES (%s, %s, %s, %s);")
         cursor.execute(query, (timestamp, pred, true_label, confidence))
         connection.commit()
         cursor.close()
