@@ -21,6 +21,12 @@ st.write("Draw a digit (0–9) below and click Predict")
 model = load_model("mnist_cnn.pth")
 model.eval()
 
+# Initialize session state for prediction control
+if "prediction_clicked" not in st.session_state:
+    st.session_state.prediction_clicked = False
+if "last_canvas_data" not in st.session_state:
+    st.session_state.last_canvas_data = None
+
 # Create 2 columns: Left for canvas, right for prediction
 col1, col2 = st.columns(2)
 
@@ -36,10 +42,16 @@ with col1:
         drawing_mode='freedraw',
         key="canvas",
     )
+    # Detect if canvas has changed; if yes, reset prediction
+    if canvas_result.image_data is not None:
+        current_img_data = canvas_result.image_data.copy()
+        # If the canvas has changed from last time, reset prediction
+        if st.session_state.last_canvas_data is not None and not np.array_equal(current_img_data, st.session_state.last_canvas_data):
+            st.session_state.prediction_clicked = False  # <-- Reset prediction on canvas change
+        # Update stored canvas
+        st.session_state.last_canvas_data = current_img_data
     if st.button("Predict"):
-        st.session_state.prediction_clicked = True
-    else:
-        st.session_state.prediction_clicked = st.session_state.get("prediction_clicked", False)
+        st.session_state.prediction_clicked = True  # <-- Set prediction trigger
 
 # ---- RIGHT COLUMN ----
 with col2:
@@ -56,11 +68,10 @@ with col2:
             pred = output.argmax(dim=1).item()
             conf = F.softmax(output, dim=1)[0][pred].item() * 100
 
-        st.markdown(f"### Prediction: **{pred}**")
-        st.markdown(f"**Confidence:** {conf:.1f}%")
+        st.metric(label="Prediction", value=str(pred), delta=f"{conf:.1f}%")
 
         # Save prediction to DB (optional)
-        create_table_and_insert(pred=pred, confidence=conf)
+        # create_table_and_insert(pred=pred, confidence=conf)
 
 # Create table and insert sample data (optional)
 create_table_and_insert()
