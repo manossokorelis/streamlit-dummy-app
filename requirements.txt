@@ -4,3 +4,4 @@ streamlit-drawable-canvas
 pandas
 torch
 Pillow
+opencv-python
