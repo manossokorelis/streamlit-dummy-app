@@ -10,11 +10,12 @@ from model import load_model
 
 # Page config
 st.set_page_config(layout="centered")
-st.title("PyTorch MNIST Digit Recognizer 2")
+st.title("PyTorch MNIST Digit Recognizer")
 st.write("Draw a digit (0–9) below and click Predict")
 
 # Load trained model
-model = load_model("mnist_cnn.pth")
+# model = load_model("mnist_cnn.pth")
+model = load_model()
 
 # Create 2 columns: Left for canvas, right for prediction
 col1, col2 = st.columns(2)

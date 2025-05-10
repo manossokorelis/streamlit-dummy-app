@@ -2,6 +2,7 @@
 
 import torch
 import torch.nn as nn
+from torchvision import models
 
 class CNN(nn.Module):
     def __init__(self):
