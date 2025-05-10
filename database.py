@@ -4,6 +4,7 @@ import psycopg2
 import streamlit as st
 from psycopg2 import sql
 import os
+from datetime import datetime
 
 # Set up the connection to the database using environment variables or directly
 DB_HOST = "dpg-d0f2ofs9c44c738ktsr0-a.oregon-postgres.render.com"
