@@ -9,8 +9,8 @@ import torch.nn.functional as F
 import numpy as np
 import pandas as pd
 from model import load_model
-from database import create_table_and_insert
-from utils import fetch_data 
+from database import fetch_data
+from utils import create_table_and_insert  
 
 # Page config
 st.set_page_config(layout="centered")
@@ -28,10 +28,11 @@ col1, col2 = st.columns(2)
 with col1:
     canvas_result = st_canvas(
         fill_color="#ffffff",
-        stroke_width=10,
+        stroke_width=20,
         stroke_color='#ffffff',
         background_color="#000000",
-        height=150,width=150,
+        height=280,
+        width=280,
         drawing_mode='freedraw',
         key="canvas",
     )
@@ -60,7 +61,6 @@ with col2:
 
         # Save prediction to DB (optional)
         create_table_and_insert(pred=pred, confidence=conf)
-
 
 # Create table and insert sample data (optional)
 create_table_and_insert()
