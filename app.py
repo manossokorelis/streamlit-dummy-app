@@ -73,8 +73,8 @@ with col2:
             submitted = st.form_submit_button("Submit Feedback")
             if submitted:
                 st.success("Feedback logged to database!")
-                # Save prediction to DB (optional)
-                # create_table_and_insert(pred=pred, confidence=conf)
+                # Insert the prediction result and feedback into the database
+                insert_prediction(pred=pred, true_label=true_label, confidence=conf)
 
 # Create table and insert sample data (optional)
 create_table_and_insert()
