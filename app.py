@@ -72,7 +72,8 @@ data = fetch_data()
 
 if data:
     # Show only the last 10 entries (reversed for most recent first)
-    recent_data = list(reversed(data[-10:]))
+    # recent_data = list(reversed(data[-10:]))
+    recent_data = data
 
     # Table header
     col1, col2, col3, col4 = st.columns([4, 1, 1, 1])

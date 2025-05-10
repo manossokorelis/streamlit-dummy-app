@@ -29,7 +29,7 @@ def fetch_data():
     connection = connect_db()
     if connection:
         cursor = connection.cursor()
-        query = "SELECT * FROM predictions LIMIT 10;"
+        query = "SELECT * FROM predictions;"
         cursor.execute(query)
         rows = cursor.fetchall()
         cursor.close()
