@@ -58,8 +58,6 @@ with col2:
     if canvas_result.image_data is not None and st.session_state.get("prediction_clicked", False):
         img = cv2.resize(canvas_result.image_data.astype("uint8"), (28, 28))
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-        # Normalize and reshape image
         img = img.astype(np.float32) / 255.0
         img_tensor = torch.tensor(img).unsqueeze(0).unsqueeze(0)
 
@@ -70,8 +68,13 @@ with col2:
 
         st.metric(label="Prediction", value=str(pred), delta=f"{conf:.1f}%")
 
-        # Save prediction to DB (optional)
-        # create_table_and_insert(pred=pred, confidence=conf)
+        with st.form("feedback_form"):
+            true_label = st.number_input("Enter True Label:", min_value=0, max_value=9, step=1)
+            submitted = st.form_submit_button("Submit Feedback")
+            if submitted:
+                st.success("Feedback logged to database!")
+                # Save prediction to DB (optional)
+                # create_table_and_insert(pred=pred, confidence=conf)
 
 # Create table and insert sample data (optional)
 create_table_and_insert()
