@@ -89,36 +89,27 @@ st.subheader("Prediction History")
 data = fetch_data()
 
 if data:
-    history_data = [
-        {
-            "Timestamp": row[1],
-            "Pred": row[2],
-            "True": row[3],
-            "Conf": f"{float(row[4]):.0f}%"
-        }
-        for row in reversed(data[:10])  # Show only last 10 entries
-    ]
+    # Show only the last 10 entries (reversed for most recent first)
+    recent_data = list(reversed(data[-10:]))
 
-    # Create header with fixed-width columns and escaped curly braces
-    table_md = """
-<style>
-.pred-table {{
-    font-family: monospace;
-    white-space: pre;
-}}
-</style>
-<div class="pred-table">
-<b>{:<20} {:<6} {:<6} {:<6}</b>
-""".format("Timestamp", "Pred", "True", "Conf")
+    # Table header
+    col1, col2, col3, col4 = st.columns([4, 1, 1, 1])
+    col1.markdown("**Timestamp**")
+    col2.markdown("**Pred**")
+    col3.markdown("**True**")
+    col4.markdown("**Conf**")
 
-    # Add each row
-    for row in history_data:
-        table_md += "{:<20} {:<6} {:<6} {:<6}\n".format(
-            row["Timestamp"], row["Pred"], row["True"], row["Conf"]
-        )
+    # Table rows
+    for row in recent_data:
+        timestamp = row[1]
+        pred = row[2]
+        true = row[3]
+        conf = f"{float(row[4]):.0f}%"
 
-    table_md += "</div>"
-
-    st.markdown(table_md, unsafe_allow_html=True)
+        col1, col2, col3, col4 = st.columns([4, 1, 1, 1])
+        col1.markdown(f"{timestamp}")
+        col2.markdown(f"{pred}")
+        col3.markdown(f"{true}")
+        col4.markdown(f"{conf}")
 else:
     st.info("No prediction history to display.")
