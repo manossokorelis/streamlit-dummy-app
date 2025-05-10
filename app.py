@@ -9,7 +9,7 @@ import torch.nn.functional as F
 import numpy as np
 import pandas as pd
 from model import load_model
-from database import fetch_data
+from database import fetch_data, insert_prediction
 from utils import create_table_and_insert  
 
 # Page config
