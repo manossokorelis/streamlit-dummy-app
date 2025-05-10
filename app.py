@@ -69,30 +69,40 @@ with col2:
 # ---- PREDICTION HISTORY ----
 st.subheader("Prediction History")
 data = fetch_data()
-
 if data:
-    # Show only the last 10 entries (reversed for most recent first)
-    # recent_data = list(reversed(data[-10:]))
-    recent_data = data
-
-    # Table header
-    col1, col2, col3, col4 = st.columns([4, 1, 1, 1])
-    col1.markdown("**Timestamp**")
-    col2.markdown("**Pred**")
-    col3.markdown("**True**")
-    col4.markdown("**Conf**")
-
-    # Table rows
-    for row in recent_data:
-        timestamp = row[1]
-        pred = row[2]
-        true = row[3]
-        conf = f"{float(row[4]):.0f}%"
-
-        col1, col2, col3, col4 = st.columns([4, 1, 1, 1])
-        col1.markdown(f"{timestamp}")
-        col2.markdown(f"{pred}")
-        col3.markdown(f"{true}")
-        col4.markdown(f"{conf}")
+    history_data = [
+        {
+            "Timestamp": row[1],
+            "Pred": row[2],
+            "True": row[3],
+            "Conf": f"{float(row[4]):.1f}%"
+        }
+        for row in reversed(data) 
+    ]
+    df = pd.DataFrame(history_data)
+    st.table(df)
 else:
     st.info("No prediction history to display.")
+
+# ---- PREDICTION HISTORY ----
+# st.subheader("Prediction History")
+# data = fetch_data()
+# if data:
+#     recent_data = data
+#     col1, col2, col3, col4 = st.columns([4, 1, 1, 1])
+#     col1.markdown("**Timestamp**")
+#     col2.markdown("**Pred**")
+#     col3.markdown("**True**")
+#     col4.markdown("**Conf**")
+#     for row in recent_data:
+#         timestamp = row[1]
+#         pred = row[2]
+#         true = row[3]
+#         conf = f"{float(row[4]):.0f}%"
+#         col1, col2, col3, col4 = st.columns([4, 1, 1, 1])
+#         col1.markdown(f"{timestamp}")
+#         col2.markdown(f"{pred}")
+#         col3.markdown(f"{true}")
+#         col4.markdown(f"{conf}")
+# else:
+#     st.info("No prediction history to display.")
