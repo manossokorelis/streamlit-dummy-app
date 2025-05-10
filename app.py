@@ -87,6 +87,7 @@ with col2:
 # ---- PREDICTION HISTORY ----
 st.subheader("Prediction History")
 data = fetch_data()
+
 if data:
     history_data = [
         {
@@ -95,16 +96,16 @@ if data:
             "True": row[3],
             "Conf": f"{float(row[4]):.0f}%"
         }
-        for row in reversed(data)
+        for row in reversed(data[:10])  # Show only last 10 entries
     ]
-    
-    # Create header with fixed-width columns
+
+    # Create header with fixed-width columns and escaped curly braces
     table_md = """
 <style>
-.pred-table {
+.pred-table {{
     font-family: monospace;
     white-space: pre;
-}
+}}
 </style>
 <div class="pred-table">
 <b>{:<20} {:<6} {:<6} {:<6}</b>
