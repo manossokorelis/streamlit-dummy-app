@@ -15,7 +15,7 @@ st.write("Draw a digit (0–9) below and click Predict")
 
 # Load trained model
 # model = load_model("mnist_cnn.pth")
-model = load_model()
+model = load_model("mnist_mobilenetv2.pth")
 
 # Create 2 columns: Left for canvas, right for prediction
 col1, col2 = st.columns(2)
@@ -45,14 +45,16 @@ with col2:
         # Preprocess image
         # 1. Invert the image to match MNIST style
         img = 255 - img[:, :, 0]  # Invert image (since canvas is white=255, black=0)
-        # 2. Resize to (28, 28) and convert to grayscale (already grayscale but good to ensure)
-        img = Image.fromarray(img.astype(np.uint8)).resize((28, 28)).convert("L")
-        # 3. Convert to numpy array and normalize (MNIST normalization: mean=0.1307, std=0.3081)
+        # 2. Resize to (224, 224) to match MobileNetV2 input size
+        img = Image.fromarray(img.astype(np.uint8)).resize((224, 224)).convert("L")
+        # 3. Convert to numpy array and normalize (ImageNet normalization)
         img = np.array(img, dtype=np.float32)
         img = img / 255.0  # Normalize to [0, 1] range
-        img = (img - 0.1307) / 0.3081  # Apply the MNIST normalization
-        # 4. Convert to tensor and add batch dimension
-        img = torch.tensor(img, dtype=torch.float32).unsqueeze(0).unsqueeze(0)
+        img = (img - 0.485) / 0.229  # Apply ImageNet normalization
+        # 4. Convert to tensor and add batch dimension and 3 channels (MobileNetV2 expects 3 channels)
+        img = np.repeat(img[:, :, np.newaxis], 3, axis=2)  # Convert to 3 channels (RGB)
+        img = torch.tensor(img.transpose(2, 0, 1), dtype=torch.float32).unsqueeze(0)
+        
         # Predict
         with torch.no_grad():
             output = model(img)
@@ -60,6 +62,7 @@ with col2:
             conf = torch.softmax(output, dim=1)[0][pred].item() * 100
         # Show prediction and confidence
         st.metric(label="Prediction", value=str(pred), delta=f"{conf:.1f}%")
+        
         # Optional: Feedback form
         with st.form("feedback_form"):
             true_label = st.number_input("Enter True Label:", min_value=0, max_value=9, step=1)
@@ -76,7 +79,7 @@ with col2:
     # Ensure the user presses "Predict" again for the next drawing
     if not st.session_state.get("prediction_clicked", False):
         st.write("Draw a digit and then click 'Predict' to get a result!")
-
+        
 # Create table and insert sample data (optional)
 create_table_and_insert()
 
