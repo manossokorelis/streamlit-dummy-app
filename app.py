@@ -9,7 +9,7 @@ from PIL import Image
 from model import load_model  # Assuming model.py exists
 
 # Page config
-st.set_page_config(layout="wide")
+st.set_page_config(layout="centered")
 st.title("PyTorch MNIST Digit Recognizer")
 st.write("Draw a digit (0–9) below and click Predict")
 
@@ -45,7 +45,7 @@ with col2:
         img = Image.fromarray((img[:, :, 0] * 255).astype(np.uint8))
         img = img.resize((28, 28)).convert("L")
         img = np.array(img)
-        img = 255 - img  # Invert
+        # img = 255 - img  # Invert
         img = img / 255.0
         img = torch.tensor(img, dtype=torch.float32).unsqueeze(0).unsqueeze(0)
 
