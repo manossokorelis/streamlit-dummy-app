@@ -10,7 +10,7 @@ from model import load_model
 
 # Page config
 st.set_page_config(layout="centered")
-st.title("PyTorch MNIST Digit Recognizer")
+st.title("PyTorch MNIST Digit Recognizer 2")
 st.write("Draw a digit (0–9) below and click Predict")
 
 # Load trained model
