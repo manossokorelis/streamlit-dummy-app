@@ -2,44 +2,6 @@
 
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
-from database import connect_db, fetch_data
-from utils import create_table_and_insert
-import pandas as pd
-import torch
-import numpy as np
-from PIL import Image
-from model import load_model 
-
-# Page config
-st.set_page_config(layout="centered")
-st.title("PyTorch MNIST Digit Recognizer 0")
-st.write("Draw a digit (0–9) below and click Predict")
-
-# Load trained model
-model = load_model("mnist_cnn.pth")
-# Create 2 columns: Left for canvas, right for prediction
-col1, col2 = st.columns(2)
-
-# ---- LEFT COLUMN ----
-with col1:
-    canvas_result = st_canvas(
-        fill_color="white",
-        stroke_width=20,
-        stroke_color="white",
-        background_color="black",
-        width=280,
-        height=280,
-        drawing_mode="freedraw",
-        key="canvas",
-    )
-    if st.button("Predict"):
-        st.session_state.prediction_clicked = True
-    else:
-        st.session_state.prediction_clicked = st.session_state.get("prediction_clicked", False)
-
-# ---- RIGHT COLUMN ----
-import streamlit as st
-from streamlit_drawable_canvas import st_canvas
 from PIL import Image
 import torch
 import numpy as np

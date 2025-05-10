@@ -18,7 +18,6 @@ class CNN(nn.Module):
             nn.ReLU(),
             nn.Linear(128, 10)
         )
-
     def forward(self, x):
         return self.model(x)
 
