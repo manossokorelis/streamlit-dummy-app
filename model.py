@@ -21,6 +21,7 @@ class CNN(nn.Module):
     def forward(self, x):
         return self.model(x)
 
+@st.cache_resource
 def load_model(weights_path="mnist_cnn.pth"):
     model = CNN()
     model.load_state_dict(torch.load(weights_path, map_location=torch.device("cpu")))
