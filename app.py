@@ -8,8 +8,8 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 import pandas as pd
-from model import load_model
-from utils import create_table, fetch_data, insert_prediction
+from scripts.model import load_model
+from scripts.utils import create_table, fetch_data, insert_prediction
 
 # Page config
 st.set_page_config(layout="centered")
@@ -25,7 +25,7 @@ if "last_canvas_data" not in st.session_state:
 create_table()
 
 # Load trained model
-model = load_model("mnist_cnn.pth")
+model = load_model("data/mnist_cnn.pth")
 model.eval()
 
 # ---- LEFT COLUMN ----
@@ -87,3 +87,8 @@ if data:
         col4.markdown(f"{conf}")
 else:
     st.info("No prediction history to display.")
+
+# ---- GITHUB ----
+st.write("---")
+st.write("Made by [manossokorelis](https://github.com/manossokorelis)")
+st.write("Source code available at: [streamlit-dummy-app](https://github.com/manossokorelis/streamlit-dummy-app)")
